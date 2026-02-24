@@ -14,4 +14,81 @@ login.php —                               User authentication and lock-out log
 
 dashboard.php —                          Protected user area. jismein money transfer happens
 
+
+
+                 ┌──────────────────────┐
+                 │        USER          │
+                 │  (External Entity)   │
+                 └──────────┬───────────┘
+                            │
+                            │ 1. Login Request (GET)
+                            ▼
+               ┌──────────────────────────┐
+               │   P1: Load Login Page    │
+               │ - Start Session          │
+               │ - Generate CSRF Token    │
+               └──────────┬───────────────┘
+                          │
+                          │ 2. CSRF Token
+                          ▼
+               ┌──────────────────────────┐
+               │   D1: Session Store      │
+               │  ($_SESSION data)        │
+               └──────────┬───────────────┘
+                          │
+                          │ 3. Login Form (HTML + Token)
+                          ▼
+                 ┌──────────────────────┐
+                 │        USER          │
+                 └──────────┬───────────┘
+                            │
+                            │ 4. Credentials + CSRF (POST)
+                            ▼
+               ┌──────────────────────────┐
+               │ P2: Validate Login       │
+               │ - Verify CSRF            │
+               │ - Check Lock Status      │
+               │ - Verify Password        │
+               └──────────┬───────────────┘
+                          │
+          ┌───────────────┼────────────────┐
+          │               │                │
+          ▼               ▼                ▼
+
+ ┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+ │ D1: Session    │  │ D2: MAJOR      │  │ Password Hash  │
+ │ Store          │  │ Database       │  │ Verification   │
+ │ (CSRF token)   │  │ (User Data)    │  │ password_verify│
+ └────────────────┘  └────────────────┘  └────────────────┘
+
+                          │
+                          │ 5. If Valid
+                          ▼
+               ┌──────────────────────────┐
+               │ P3: Session Elevation    │
+               │ - session_regenerate_id  │
+               │ - Store user_id          │
+               └──────────┬───────────────┘
+                          │
+                          ▼
+               ┌──────────────────────────┐
+               │   D1: Session Store      │
+               │  (Authenticated Data)    │
+               └──────────┬───────────────┘
+                          │
+                          │ 6. Redirect
+                          ▼
+                 ┌──────────────────────┐
+                 │  P4: Dashboard/Auth  │
+                 │ - Check Session      │
+                 │ - Timeout Check      │
+                 └──────────┬───────────┘
+                            │
+                            ▼
+                 ┌──────────────────────┐
+                 │        USER          │
+                 │  (Authenticated)     │
+                 └──────────────────────┘
+
+
 <img width="1853" height="552" alt="image" src="https://github.com/user-attachments/assets/c57daac8-0086-4a28-95e9-3843e75b4550" />
