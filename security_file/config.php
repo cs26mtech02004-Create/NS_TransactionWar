@@ -13,13 +13,27 @@ ini_set('session.use_strict_mode', 1);
 
 session_start();
 
-// Auto logout after 90 sec inactivity
+// Auto logout after 15 min activity
 $timeout = 90;
 
-if (isset($_SESSION['LAST_ACTIVITY']) &&
-    (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)
+) {
 
-    $_SESSION = [];
+    $_SESSION = [];// empty session variable
+
+    // Delete session cookie
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
     session_destroy();
 
     header("Location: login.php");
