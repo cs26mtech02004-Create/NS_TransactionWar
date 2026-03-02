@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <circle cx="24" cy="24" r="5" fill="#c9a84c" opacity="0.9"/>
             </svg>
         </div>
-        <div class="brand-title">Nexus</div>
+        <div class="brand-title">Bannking system</div>
         <div class="brand-sub">Member Portal</div>
     </div>
 
