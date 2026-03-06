@@ -1,0 +1,290 @@
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --border: #1e1e2e;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --text: #e8e4dc;
+  --muted: #6b6878;
+  --error: #e05c5c;
+  --success: #5ce09a;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Geometric background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.grid-lines {
+  position: fixed;
+  inset: 0;
+  background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Decorative corner lines */
+.corner {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+}
+.corner--tl { top: 24px; left: 24px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); opacity: 0.3; }
+.corner--br { bottom: 24px; right: 24px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); opacity: 0.3; }
+
+.wrapper {
+  width: 100%;
+  max-width: 440px;
+  padding: 20px;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  position: relative;
+}
+
+.brand-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+
+.brand-sub {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gold corner accents on card */
+.card::before, .card::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
+.card::before {
+  top: -1px; left: -1px;
+  border-top: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+.card::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.card-header {
+  margin-bottom: 32px;
+}
+
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.card-desc {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 12px 0 0;
+}
+
+.field {
+  margin-bottom: 22px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+  transition: color 0.2s;
+  pointer-events: none;
+}
+
+.field input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  padding: 12px 14px 12px 40px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.05em;
+  -webkit-appearance: none;
+}
+
+.field input::placeholder { color: var(--muted); opacity: 0.6; }
+
+.field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+
+.field input:focus + svg,
+.input-wrap:focus-within svg {
+  color: var(--gold);
+}
+
+/* Fix icon z-order */
+.input-wrap svg { z-index: 1; }
+.field input:focus { position: relative; z-index: 0; }
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s;
+  margin-top: 8px;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.btn:hover::before { transform: translateX(0); }
+.btn:hover { color: var(--bg); }
+.btn span { position: relative; z-index: 1; }
+
+.alert {
+  padding: 12px 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+  border-left: 2px solid;
+  animation: fadeUp 0.4s ease both;
+}
+
+.alert--error { border-color: var(--error); background: rgba(224,92,92,0.06); color: var(--error); }
+.alert--success { border-color: var(--success); background: rgba(92,224,154,0.06); color: var(--success); }
+
+.footer-text {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-top: 24px;
+}
+
+.footer-text a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.footer-text a:hover { opacity: 0.7; }
+
+.bonus-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.25);
+  padding: 5px 12px;
+  margin-bottom: 28px;
+}
+
+.bonus-badge::before {
+  content: '✦';
+  font-size: 0.6rem;
+}
