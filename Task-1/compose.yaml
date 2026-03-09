@@ -4,15 +4,24 @@ services:
     ports:
       - "8081:80"
     environment:
-      - DB_HOST=db
-      - DB_NAME=users
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${MYSQL_DATABASE}
       - DB_USER=root
-      - DB_PASS=root
+      - DB_PASS=${MYSQL_ROOT_PASSWORD}
     depends_on:
       - db
 
   db:
     image: mysql:8.0
+    restart: always
     environment:
-      MYSQL_DATABASE: users
-      MYSQL_ROOT_PASSWORD: root  # This is the only line needed for root
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      # 1. This line maps your local init.sql to the Docker entrypoint folder.
+      # Anything in this folder is executed automatically on the first startup.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      
+      # 2. This line ensures your data is saved on your Ubuntu system in a folder 
+      # called 'db_data', so you don't lose your users if the container stops.
+      - ./db_data:/var/lib/mysql
