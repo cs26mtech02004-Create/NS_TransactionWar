@@ -1,3 +1,19 @@
+first step -- clone Task-1
+second step---- make .env file and add below data
+
+DB_HOST=db
+MYSQL_DATABASE=users
+MYSQL_ROOT_PASSWORD=root
+ 
+
+run your docker now with command ---- sudo docker compose up -d --build
+ now hit url --- http://localhost:8081/login.php and http://localhost:8081/register.php
+
+----------------------------------------------------------------
+
+
+
+
 
 JUST INITIAL VIEW
 
@@ -10,6 +26,9 @@ security_file/db.php —                      database connection.
 
 auth.php —                                Access control (Gatekeeper), NO One can enter dashboard, other page without coming from login page.
 
+
+
+u
 login.php —                               User authentication and lock-out logic(3 failed atetmp, lock etc).
 
 dashboard.php —                          Protected user area. jismein money transfer happens
