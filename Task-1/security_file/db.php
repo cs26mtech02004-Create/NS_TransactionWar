@@ -1,9 +1,8 @@
 <?php
-$host = 'db';
-$user = 'root';
-$pass = 'root'; 
-$db = 'users';   
-
+$host = getenv('DB_HOST') ?: 'db'; 
+$db   = getenv('DB_NAME') ?: 'users';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root';
 
 
 try {
