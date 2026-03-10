@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: transactiwar_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret_2026
+      MYSQL_DATABASE:      transactiwar
+      MYSQL_USER:          tw_user
+      MYSQL_PASSWORD:      TW_StrongPass#2026
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    container_name: transactiwar_web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: transactiwar
+      DB_USER: tw_user
+      DB_PASS: TW_StrongPass#2026
+    ports:
+      - "8083:80"
+
+volumes:
+  db_data:
