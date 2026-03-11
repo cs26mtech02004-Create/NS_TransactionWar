@@ -1,0 +1,39 @@
+# FILE: .dockerignore
+# PURPOSE: Exclude files from the Docker build context.
+#
+# HOW IT WORKS:
+#   When you run `docker build`, Docker sends every file in the project
+#   folder to the Docker daemon. .dockerignore tells Docker which files
+#   to exclude from that transfer entirely.
+#
+# NOTE: With the new Dockerfile using selective COPY (copying only specific
+# PHP files and directories), most non-app files are already excluded by
+# not being explicitly COPYed. But .dockerignore provides a safety net —
+# if someone accidentally adds a wildcard COPY, these files are still excluded.
+
+# ── SECRETS — NEVER in the image ──────────────────────────────
+.env
+
+# ── USER DATA — belongs on host volumes, not in image ─────────
+logs/
+private_uploads/
+
+# ── PROJECT ROOT FILES — not needed in image ──────────────────
+# These are deployment/infrastructure files, not app files
+Dockerfile
+docker-compose.yml
+docker-compose.*.yml
+init.sql
+setup.sh
+.env.example
+
+# ── GIT ───────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── SYSTEM / EDITOR FILES ─────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log

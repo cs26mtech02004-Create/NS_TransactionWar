@@ -1,5 +1,0 @@
-//Ignoring the environment variables
-.env
-
-//Ignoring the database folder 
-db_data/

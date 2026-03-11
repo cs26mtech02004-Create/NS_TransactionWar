@@ -1,0 +1,7 @@
+.env
+private_uploads/
+logs/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
