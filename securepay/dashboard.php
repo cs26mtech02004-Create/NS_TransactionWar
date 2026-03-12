@@ -70,7 +70,6 @@ $csrf_token = generate_csrf_token();
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <a href="/transfer.php" class="btn btn-primary">▶ TRANSFER FUNDS</a>
-                <a href="/transaction_history.php" class="btn btn-secondary">HISTORY</a>
             </div>
         </div>
     </div>
@@ -139,12 +138,6 @@ $csrf_token = generate_csrf_token();
     <a href="/search.php"              class="btn btn-secondary">SEARCH USERS</a>
     <a href="/profile.php"             class="btn btn-secondary">EDIT PROFILE</a>
     <a href="/transaction_history.php" class="btn btn-secondary">FULL HISTORY</a>
-    <!-- CSRF token appended to logout link — verified in logout.php -->
-    <a href="/logout.php?csrf_token=<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>"
-       class="btn btn-danger"
-       onclick="return confirm('LOG OUT?\n\nYour session will be terminated.')">
-        LOGOUT
-    </a>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -1,92 +1,131 @@
-/**
- * FILE: assets/script.js
- * PURPOSE: Minimal client-side enhancements for the ATM UI.
- *
- * SECURITY PHILOSOPHY:
- *   Client-side JavaScript is COSMETIC ONLY in this application.
- *   Every security check (CSRF, auth, input validation, balance check)
- *   happens on the SERVER in PHP. JS validation is a UX convenience —
- *   it can always be disabled or bypassed by the user.
- *
- *   Never trust client-side code for security decisions.
- */
-
 'use strict';
 
-// ── AUTO-HIDE ALERTS ─────────────────────────────────────────
-// Success messages fade out after 4 seconds so the user isn't
-// staring at stale feedback.
+// ── PASSWORD VISIBILITY TOGGLE ────────────────────────────────
+// Clicks on .pw-toggle button toggle the adjacent input between
+// type=password (hidden) and type=text (visible).
 document.addEventListener('DOMContentLoaded', function () {
-    const successAlerts = document.querySelectorAll('.atm-alert-success');
-    successAlerts.forEach(function (el) {
-        setTimeout(function () {
-            el.style.transition = 'opacity 0.8s';
-            el.style.opacity = '0';
-            setTimeout(function () { el.remove(); }, 800);
-        }, 4000);
+    document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var targetId = btn.getAttribute('data-target');
+            var input    = document.getElementById(targetId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '&#128064;'; // open eye = currently visible
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '&#128065;'; // closed eye = currently hidden
+            }
+        });
     });
 });
 
-// ── CONFIRM TRANSFER ─────────────────────────────────────────
-// Asks user to confirm before submitting a money transfer.
-// NOTE: This is UX only — the server validates everything.
-document.addEventListener('DOMContentLoaded', function () {
-    const transferForm = document.getElementById('transfer-form');
-    if (transferForm) {
-        transferForm.addEventListener('submit', function (e) {
-            const amount = document.getElementById('amount');
-            const toUser = document.getElementById('to_user_id');
-            if (amount && toUser) {
-                const confirmed = window.confirm(
-                    'CONFIRM TRANSFER\n\n' +
-                    'To User ID : ' + toUser.value + '\n' +
-                    'Amount     : Rs. ' + parseFloat(amount.value).toFixed(2) + '\n\n' +
-                    'This transaction cannot be reversed.\n' +
-                    'Press OK to confirm.'
-                );
-                if (!confirmed) {
-                    e.preventDefault();
-                }
-            }
-        });
-    }
-});
-
 // ── PASSWORD STRENGTH INDICATOR ──────────────────────────────
-// Visual feedback only — real validation is in PHP.
 document.addEventListener('DOMContentLoaded', function () {
-    const pwField = document.getElementById('password');
-    const indicator = document.getElementById('pw-strength');
+    var pwField    = document.getElementById('password');
+    var indicator  = document.getElementById('pw-strength');
     if (!pwField || !indicator) return;
 
     pwField.addEventListener('input', function () {
-        const val = pwField.value;
-        let score = 0;
+        var val   = pwField.value;
+        var score = 0;
         if (val.length >= 8)          score++;
         if (/[A-Z]/.test(val))        score++;
         if (/[0-9]/.test(val))        score++;
         if (/[^A-Za-z0-9]/.test(val)) score++;
 
-        const labels = ['', 'WEAK', 'FAIR', 'GOOD', 'STRONG'];
-        const colors = ['', '#ff3333', '#ffaa00', '#ffdd00', '#00ff41'];
-
-        indicator.textContent = val.length === 0 ? '' : '[ ' + (labels[score] || 'WEAK') + ' ]';
+        var labels = ['', 'WEAK', 'FAIR', 'GOOD', 'STRONG'];
+        var colors = ['', '#e03333', '#f0a500', '#cccc00', '#00e639'];
+        indicator.textContent = val.length === 0 ? '' : labels[score] || 'WEAK';
         indicator.style.color = colors[score] || colors[1];
     });
 });
 
-// ── CHARACTER COUNTER FOR BIOGRAPHY ──────────────────────────
+// ── AUTO-HIDE SUCCESS ALERTS ──────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
-    const bio = document.getElementById('bio');
-    const counter = document.getElementById('bio-counter');
-    if (!bio || !counter) return;
+    document.querySelectorAll('.atm-alert-success').forEach(function (el) {
+        setTimeout(function () {
+            el.style.transition = 'opacity 0.6s';
+            el.style.opacity    = '0';
+            setTimeout(function () { el.remove(); }, 600);
+        }, 4000);
+    });
+});
 
-    const MAX = 5000;
-    function updateCounter() {
-        const remaining = MAX - bio.value.length;
-        counter.textContent = remaining + ' chars remaining';
-        counter.style.color = remaining < 200 ? '#ff3333' : '#007a1a';
+// ── TRANSFER CONFIRM MODAL ────────────────────────────────────
+// Replaces browser window.confirm() with an in-page modal dialog.
+// The modal shows recipient + amount and asks the user to confirm.
+// Only on submit of the actual form button does the form get submitted.
+document.addEventListener('DOMContentLoaded', function () {
+    var trigger  = document.getElementById('transfer-trigger');
+    var modal    = document.getElementById('transfer-modal');
+    var confirm  = document.getElementById('modal-confirm');
+    var cancel   = document.getElementById('modal-cancel');
+    var form     = document.getElementById('transfer-form');
+
+    if (!trigger || !modal || !form) return;
+
+    trigger.addEventListener('click', function () {
+        console.log("clicked");
+        var username = document.getElementById('to_username');
+        var amount   = document.getElementById('amount');
+        if (!username || !amount) return;
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Populate modal with current values before showing
+        document.getElementById('modal-recipient').textContent = username.value;
+        document.getElementById('modal-amount').textContent    =
+            'Rs. ' + parseFloat(amount.value || 0).toFixed(2);
+
+        modal.style.display = 'flex';
+    });
+
+    if (cancel) {
+        cancel.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
     }
-    bio.addEventListener('input', updateCounter);
-    updateCounter();
+
+    // Clicking overlay background also closes modal
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.style.display = 'none';
+    });
+
+    if (confirm) {
+        confirm.addEventListener('click', function () {
+            modal.style.display = 'none';
+            form.submit();
+        });
+    }
+});
+
+// ── COMMENT CHARACTER COUNTER ─────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    var comment = document.getElementById('comment');
+    var counter = document.getElementById('comment-count');
+    if (!comment || !counter) return;
+    comment.addEventListener('input', function () {
+        var left = 500 - comment.value.length;
+        counter.textContent = left;
+        counter.style.color = left < 50 ? '#e03333' : '';
+    });
+});
+
+// ── BIO CHARACTER COUNTER ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    var bio     = document.getElementById('bio');
+    var counter = document.getElementById('bio-counter');
+    if (!bio || !counter) return;
+    var MAX = 5000;
+    function update() {
+        var left = MAX - bio.value.length;
+        counter.textContent = left + ' left';
+        counter.style.color = left < 200 ? '#e03333' : '';
+    }
+    bio.addEventListener('input', update);
+    update();
 });

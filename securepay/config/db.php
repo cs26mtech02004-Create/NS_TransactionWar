@@ -19,11 +19,11 @@
 // getenv() reads values that Docker injects from your .env file.
 // If the env variable is missing we fall back to a safe default for
 // local development only — never use defaults in production.
-$host   = getenv('DB_HOST')     ?: 'db';       // Docker service name
-$dbname = getenv('DB_NAME')     ?: 'securepay';
-$user   = getenv('DB_USER')     ?: 'spuser';
-$pass   = getenv('DB_PASS')     ?: '';          // Empty default forces .env to be set
-$port   = getenv('DB_PORT')     ?: '3306';
+$host   = getenv('DB_HOST');       // Docker service name
+$dbname = getenv('DB_NAME');
+$user   = getenv('DB_USER');
+$pass   = getenv('DB_PASS');              // Empty default forces .env to be set
+$port   = getenv('DB_PORT');     
 
 // DSN = Data Source Name. This tells PDO which driver and database to use.
 $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";

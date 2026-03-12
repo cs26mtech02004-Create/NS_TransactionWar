@@ -1,25 +1,9 @@
-# FILE: docker-compose.yml
-# PURPOSE: Orchestrate app + database containers with full security hardening.
-#
-# SECURITY MEASURES:
-#   1. All secrets from .env — nothing hardcoded
-#   2. MySQL NOT exposed to host network (internal only)
-#   3. Both containers on isolated private Docker network
-#   4. App container: read-only filesystem + explicit writable mounts
-#   5. no_new_privileges: true — container process cannot escalate privileges
-#   6. Capabilities dropped to absolute minimum (cap_drop: ALL)
-#   7. DB init script mounted read-only (:ro)
-#   8. Healthcheck ensures DB is ready before app starts
-#   9. restart: unless-stopped — survives crashes, stops cleanly on docker stop
-#  10. Low-privilege MySQL app user (created by init.sql, not root)
-
 version: '3.8'
+
+# FILE: docker-compose.yml
 
 services:
 
-  # ────────────────────────────────────────────────────────────
-  # APP CONTAINER — PHP 8.2 + Apache
-  # ────────────────────────────────────────────────────────────
   app:
     build: .
     container_name: securepay_app
@@ -27,62 +11,41 @@ services:
 
     ports:
       - "8080:80"
-      # Maps host:8080 → container:80
-      # Change "8080" to any port you want on the host side
-      # The container always listens on port 80 internally
 
     environment:
-      # All secrets injected from .env file — never hardcoded here
-      DB_HOST: db          # Docker service name — resolves on internal network
+      DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      DB_PORT: 3306
+      DB_PORT: ${DB_PORT}
 
     volumes:
-      # Mount private storage directories from the HOST into the container.
-      # These paths are OUTSIDE the container's webroot — Apache cannot serve them.
-      # Changes written by the app persist on the host after container restart.
-      - ./private_uploads:/var/www/private/uploads
+      # FIXED: Simple bind mounts — most reliable cross-platform approach.
+      # The named volume + local driver approach with ${PWD} does not expand
+      # correctly on all Docker versions and platforms.
+      # Simple bind mounts work identically on Linux, Mac, and Windows.
+      # Docker creates the host directory automatically if it does not exist
+      # when using this syntax (Docker Compose v2.x behaviour).
       - ./logs:/var/www/private/logs
+      - ./private_uploads:/var/www/private/uploads
 
-    # security_opt:
-    #   # no-new-privileges: true
-    #   #   The container process (Apache/PHP running as www-data) can NEVER
-    #   #   escalate its own privileges — even if it calls setuid/setgid or
-    #   #   exploits a SUID binary inside the container.
-    #   #   Prevents privilege escalation attacks if the container is compromised.
-    #   - no-new-privileges:true
+    security_opt:
+      - no-new-privileges:true
 
     cap_drop:
-      # Drop ALL Linux capabilities by default.
-      # Capabilities are fine-grained root privileges (e.g., CAP_NET_ADMIN
-      # lets you modify network interfaces, CAP_SYS_PTRACE lets you trace processes).
-      # A default container has ~14 capabilities. We drop all of them.
       - ALL
 
     cap_add:
-      # Add back ONLY the capabilities Apache actually needs to start:
-      #   NET_BIND_SERVICE — allows binding to port 80 (ports below 1024
-      #                      normally require root; this capability grants it
-      #                      without giving full root access)
-      #
-      # Everything else (file system modification, raw sockets, kernel modules,
-      # process tracing, etc.) remains stripped.
       - NET_BIND_SERVICE
       - SETGID
       - SETUID
-
     depends_on:
       db:
-        condition: service_healthy   # App container waits for MySQL to pass health check
+        condition: service_healthy
 
     networks:
       - securepay_net
 
-  # ────────────────────────────────────────────────────────────
-  # DATABASE CONTAINER — MySQL 8.0
-  # ────────────────────────────────────────────────────────────
   db:
     image: mysql:8.0
     container_name: securepay_db
@@ -93,33 +56,23 @@ services:
       MYSQL_DATABASE:      ${DB_NAME}
       MYSQL_USER:          ${DB_USER}
       MYSQL_PASSWORD:      ${DB_PASS}
+      MYSQL_TCP_PORT:      ${DB_PORT}
 
-    # SECURITY: NO 'ports' ENTRY
-    # Without a ports mapping, MySQL port 3306 is NOT accessible from
-    # outside Docker — not from the host machine, not from the internet.
-    # The ONLY thing that can reach MySQL is the app container on securepay_net.
-    # An attacker with the DB password still cannot connect remotely.
+    # No ports: entry — MySQL unreachable outside Docker network
 
     volumes:
-      # init.sql mounted read-only (:ro) — MySQL runs it on first start
-      # :ro prevents the app from accidentally writing to the init script
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      # Named volume persists database across container restarts/rebuilds
       - db_data:/var/lib/mysql
 
-    # security_opt:
-    #   - no-new-privileges:true
+    security_opt:
+      - no-new-privileges:true
 
     cap_drop:
       - ALL
 
     cap_add:
-      # MySQL needs these capabilities to function:
-      #   CHOWN       — change file ownership of DB data files
-      #   DAC_OVERRIDE — read/write files regardless of permission bits
-      #                  (MySQL needs this for its data directory management)
-      #   SETGID      — switch group for worker processes
-      #   SETUID      — switch user for worker processes (mysql → root and back)
+      # FIXED: NET_BIND_SERVICE added here too — MySQL needs it to bind
+      # to its configured port inside the container.
       - CHOWN
       - DAC_OVERRIDE
       - NET_BIND_SERVICE
@@ -127,38 +80,22 @@ services:
       - SETUID
 
     healthcheck:
-      # mysqladmin ping checks if MySQL is accepting connections.
-      # The app container waits for this to succeed before starting Apache.
-      # Without this, the app might start before MySQL is ready and
-      # crash on the first DB connection attempt.
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
              "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s    # Check every 10 seconds
-      timeout: 5s      # Fail the check if no response in 5 seconds
-      retries: 5       # After 5 failures, mark container as unhealthy
-      start_period: 30s # Give MySQL 30 seconds to start before checks begin
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
     networks:
       - securepay_net
 
-# ── NAMED VOLUMES ─────────────────────────────────────────────
 volumes:
   db_data:
-    # Docker manages this volume on the host.
-    # Data persists even if containers are stopped, removed, or rebuilt.
-    # To fully reset the database: docker-compose down -v
-    #   WARNING: -v deletes all data. Do not run in production carelessly.
 
-# ── ISOLATED PRIVATE NETWORK ──────────────────────────────────
 networks:
   securepay_net:
     driver: bridge
-    # This creates an isolated network namespace.
-    # Only containers explicitly listed under this network can communicate.
-    # Other Docker containers on the host are on different networks
-    # and cannot reach securepay_app or securepay_db.
     ipam:
       config:
         - subnet: 172.20.0.0/16
-          # Explicit subnet prevents Docker from assigning an arbitrary
-          # range that might overlap with your corporate VPN or LAN.

@@ -65,6 +65,7 @@ COPY assets/   /var/www/html/assets/
 COPY config/   /var/www/html/config/
 COPY includes/ /var/www/html/includes/
 # Copy all root-level PHP files individually
+COPY index.php               /var/www/html/index.php
 COPY register.php            /var/www/html/register.php
 COPY login.php               /var/www/html/login.php
 COPY logout.php              /var/www/html/logout.php
@@ -108,4 +109,3 @@ RUN chown -R www-data:www-data /var/www/html    \
  && chmod -R 750 /var/www/private
 
 EXPOSE 80
-
