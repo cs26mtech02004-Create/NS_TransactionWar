@@ -1,5 +1,5 @@
 <?php
-$host = getenv('DB_HOST') ?: 'db'; 
+$host = getenv('DB_HOST') ?: '127.0.0.1'; 
 $db   = getenv('DB_NAME') ?: 'users';
 $user = getenv('DB_USER') ?: 'root';
 $pass = getenv('DB_PASS') ?: 'root';
