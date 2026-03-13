@@ -6,6 +6,7 @@
 <title>SecurePay — Technical README</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
   :root {
     --green:      #00e639;
     --green-dim:  #00992b;
@@ -25,405 +26,707 @@
     --mono:       'Share Tech Mono', 'Courier New', monospace;
     --display:    'VT323', monospace;
   }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     background: var(--bg);
-    background-image: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px);
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px
+    );
     color: var(--text);
     font-family: var(--mono);
     font-size: 13.5px;
     line-height: 1.7;
+    padding: 0;
     min-height: 100vh;
   }
-  .wrap { max-width: 900px; margin: 0 auto; background: var(--bg); border-left: 1px solid var(--border-mid); border-right: 1px solid var(--border-mid); min-height: 100vh; }
-  .top-bar { background: var(--panel); border-bottom: 1px solid var(--border-hi); padding: 0 28px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
-  .logo { font-family: var(--display); font-size: 1.8rem; color: var(--text-green); letter-spacing: .1em; }
+
+  /* ── PAGE WRAPPER ── */
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg);
+    border-left: 1px solid var(--border-mid);
+    border-right: 1px solid var(--border-mid);
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border-hi);
+    padding: 0 28px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    color: var(--text-green);
+    letter-spacing: 0.1em;
+  }
   .logo span { color: var(--amber); }
-  .doc-label { font-size: .68rem; color: var(--text-dim); letter-spacing: .14em; text-transform: uppercase; }
-  .status-bar { background: #060b06; border-bottom: 1px solid var(--border); padding: 3px 28px; font-size: .65rem; color: var(--text-dim); letter-spacing: .04em; display: flex; justify-content: space-between; }
+  .doc-label {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    background: #060b06;
+    border-bottom: 1px solid var(--border);
+    padding: 3px 28px;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ── CONTENT ── */
   .content { padding: 32px 28px 48px; }
+
+  /* ── SECTION ── */
   .section { margin-bottom: 36px; }
-  .section-header { background: var(--panel-hdr); border: 1px solid var(--border-hi); border-bottom: none; padding: 7px 14px; font-size: .68rem; color: var(--amber); text-transform: uppercase; letter-spacing: .14em; display: flex; align-items: center; gap: 8px; }
+
+  .section-header {
+    background: var(--panel-hdr);
+    border: 1px solid var(--border-hi);
+    border-bottom: none;
+    padding: 7px 14px;
+    font-size: 0.68rem;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
   .section-header::before { content: '▸'; color: var(--text-green); }
-  .section-body { background: var(--panel); border: 1px solid var(--border-hi); padding: 20px; }
-  h1 { font-family: var(--display); font-size: 2.2rem; color: var(--text-green); letter-spacing: .08em; margin-bottom: 8px; }
-  h2 { font-family: var(--display); font-size: 1.5rem; color: var(--text-green); letter-spacing: .06em; margin: 22px 0 10px; }
+
+  .section-body {
+    background: var(--panel);
+    border: 1px solid var(--border-hi);
+    padding: 20px;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  h1 {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    color: var(--text-green);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    color: var(--text-green);
+    letter-spacing: 0.06em;
+    margin: 22px 0 10px;
+  }
   p { margin-bottom: 12px; color: var(--text); }
   a { color: var(--amber); text-decoration: none; }
+  a:hover { color: #ffd060; }
   strong { color: var(--text-green); }
-  code { background: #060b06; border: 1px solid var(--border-mid); color: var(--text-green); font-family: var(--mono); font-size: .88em; padding: 1px 5px; }
-  pre { background: #060b06; border: 1px solid var(--border-mid); border-left: 3px solid var(--green-dim); padding: 14px 16px; overflow-x: auto; margin: 12px 0; font-family: var(--mono); font-size: .84rem; color: var(--text-green); line-height: 1.6; }
-  .file-tree { font-family: var(--mono); font-size: .83rem; line-height: 1.8; }
+  em { color: var(--amber-dim); font-style: normal; }
+
+  /* ── CODE ── */
+  code {
+    background: #060b06;
+    border: 1px solid var(--border-mid);
+    color: var(--text-green);
+    font-family: var(--mono);
+    font-size: 0.88em;
+    padding: 1px 5px;
+  }
+  pre {
+    background: #060b06;
+    border: 1px solid var(--border-mid);
+    border-left: 3px solid var(--green-dim);
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    color: var(--text-green);
+    line-height: 1.6;
+  }
+
+  /* ── FILE TREE ── */
+  .file-tree {
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
   .file-tree .dir  { color: var(--amber); }
+  .file-tree .file { color: var(--text); }
   .file-tree .note { color: var(--text-dim); }
-  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .83rem; }
-  th { background: var(--panel-hdr); color: var(--amber); font-family: var(--mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-hi); border-right: 1px solid var(--border); }
+
+  /* ── TABLES ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.83rem;
+  }
+  th {
+    background: var(--panel-hdr);
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-hi);
+    border-right: 1px solid var(--border);
+  }
   th:last-child { border-right: none; }
-  td { padding: 8px 12px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
   td:last-child { border-right: none; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(0,230,57,.02); }
+  tr:hover td { background: rgba(0,230,57,0.02); }
   .good { color: var(--text-green); }
+  .bad  { color: var(--red); }
   .mid  { color: var(--amber); }
-  .checklist { list-style: none; }
-  .checklist li { padding: 4px 0; font-size: .85rem; display: flex; align-items: flex-start; gap: 8px; }
-  .checklist li::before { content: '✓'; color: var(--text-green); font-size: .78rem; margin-top: 2px; flex-shrink: 0; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; margin: 0; padding: 0; }
+  .checklist li {
+    padding: 4px 0;
+    font-size: 0.85rem;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .checklist li::before {
+    content: '✓';
+    color: var(--text-green);
+    font-size: 0.78rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── TEST LIST ── */
   .test-group { margin-bottom: 20px; }
-  .test-group-title { font-size: .68rem; color: var(--amber); text-transform: uppercase; letter-spacing: .12em; border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 8px; }
-  .test-item { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; font-size: .83rem; border-bottom: 1px solid var(--border); }
+  .test-group-title {
+    font-size: 0.68rem;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+  }
+  .test-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 0.83rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
   .test-item:last-child { border-bottom: none; }
-  .test-box { width: 14px; height: 14px; border: 1px solid var(--border-hi); flex-shrink: 0; margin-top: 2px; background: var(--panel); }
+  .test-box {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border-hi);
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--panel);
+  }
+
+  /* ── URL TABLE ── */
+  .url-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
   .url-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
   .url-table td:first-child { color: var(--text-green); white-space: nowrap; }
   .url-table td:last-child { color: var(--text-dim); }
   .url-table tr:last-child td { border-bottom: none; }
-  .page-footer { background: var(--panel); border-top: 1px solid var(--border); padding: 12px 28px; font-size: .65rem; color: var(--text-dim); display: flex; justify-content: space-between; letter-spacing: .04em; }
-  hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
-  @media (max-width:640px) { .content { padding: 20px 14px 36px; } .top-bar { padding: 0 14px; } }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    padding: 12px 28px;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border: 1px solid;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .badge-green { border-color: var(--green-dim); color: var(--text-green); }
+  .badge-amber { border-color: var(--amber-dim); color: var(--amber); }
+  .badge-red   { border-color: #661111; color: var(--red); }
+
+  /* ── DIVIDER ── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 18px 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .content { padding: 20px 14px 36px; }
+    .top-bar { padding: 0 14px; }
+    .status-bar { padding: 3px 14px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 6px 8px; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<div class="top-bar">
-  <div class="logo">SECURE<span>PAY</span></div>
-  <div class="doc-label">Technical Documentation v3.0</div>
-</div>
-<div class="status-bar">
-  <span>PHP 8.2 + MySQL 8.0 + Apache 2.4 + Docker + HTTPS</span>
-  <span>INTERNAL — DO NOT DISTRIBUTE</span>
-</div>
-
-<div class="content">
-
-<!-- OVERVIEW -->
-<div class="section">
-  <div class="section-header">Overview</div>
-  <div class="section-body">
-    <h1>SecurePay Banking Terminal</h1>
-    <p>A full-stack banking web application with defence-in-depth security. PHP 8.2, MySQL 8, Apache 2.4, Docker. Runs on HTTPS using a self-signed certificate generated with openssl. Themed after Indian ATM interfaces of the early 2000s.</p>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="logo">SECURE<span>PAY</span></div>
+    <div class="doc-label">Technical Documentation v2.0</div>
   </div>
-</div>
-
-<!-- FEATURES -->
-<div class="section">
-  <div class="section-header">Implemented Features</div>
-  <div class="section-body">
-    <ul class="checklist">
-      <li>HTTPS via self-signed TLS certificate (openssl) — HTTP port 80 redirects to HTTPS</li>
-      <li>HSTS header — browser enforces HTTPS for 1 year after first visit</li>
-      <li>Session cookie lifetime = 0 — browser close destroys session</li>
-      <li>30-minute idle timeout enforced server-side in auth_guard.php</li>
-      <li>Obfuscated database column names across all tables</li>
-      <li>User registration with bcrypt (cost 12) password hashing</li>
-      <li>Login with per-IP rate limiting and timing-safe comparison</li>
-      <li>Secure session management — httponly, samesite=Strict, secure, regeneration on login</li>
-      <li>CSRF tokens on every state-changing form including logout</li>
-      <li>Profile editing — name, bio, email, avatar</li>
-      <li>Secure image upload — MIME validation, outside webroot, random filename</li>
-      <li>User search by username — includes own account, no ID exposure</li>
-      <li>Money transfers by username — internal IDs never touch the browser</li>
-      <li>Atomic transfers with row-level locking — no race conditions</li>
-      <li>Transaction history with pagination</li>
-      <li>Activity logging to file + database on every page load</li>
-      <li>Admin panel — log viewer with filtering</li>
-      <li>Docker deployment with dropped capabilities and no exposed DB port</li>
-      <li>Random non-sequential public user tokens (12-char hex)</li>
-      <li>Password visibility toggle on all password fields</li>
-      <li>Custom confirm modal — no browser alert() or confirm()</li>
-      <li>POST-based logout with CSRF token validation</li>
-    </ul>
+  <div class="status-bar">
+    <span>PHP 8.2 + MySQL 8.0 + Apache 2.4 + Docker</span>
+    <span>CLASSIFIED: INTERNAL &nbsp;|&nbsp; DO NOT DISTRIBUTE</span>
   </div>
-</div>
 
-<!-- DIRECTORY STRUCTURE -->
-<div class="section">
-  <div class="section-header">Directory Structure</div>
-  <div class="section-body">
-    <div class="file-tree">
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="section">
+      <div class="section-header">Overview</div>
+      <div class="section-body">
+        <h1>SecurePay Banking Terminal</h1>
+        <p>A full-stack banking web application demonstrating defence-in-depth security practices. Built with PHP 8.2, MySQL 8, Apache 2.4. Deployed via Docker Compose. Themed after Indian ATM interfaces of the early 2000s — SBI, PNB era.</p>
+        <p>Every user-facing feature has a corresponding security control. This document covers architecture, file reference, security decisions, test procedures, and the full attack surface.</p>
+      </div>
+    </div>
+
+    <!-- FEATURE LIST -->
+    <div class="section">
+      <div class="section-header">Implemented Features</div>
+      <div class="section-body">
+        <ul class="checklist">
+          <li>User registration with bcrypt (cost 12) password hashing</li>
+          <li>Login with per-IP rate limiting and timing-safe comparison</li>
+          <li>Secure session management — httponly, samesite=Strict, regeneration on login</li>
+          <li>CSRF tokens on every state-changing form including logout</li>
+          <li>Profile editing — name, bio, email, avatar</li>
+          <li>Secure image upload — MIME validation, outside webroot, random filename</li>
+          <li>User search by username — includes own account, no ID exposure</li>
+          <li>Money transfers by username — internal IDs never touch the browser</li>
+          <li>Atomic transfers with row-level locking — no race conditions</li>
+          <li>Transaction history with pagination</li>
+          <li>Activity logging to file + database on every page load</li>
+          <li>Admin panel — log viewer, filtering by user/IP/date</li>
+          <li>Docker deployment with dropped capabilities and no exposed DB port</li>
+          <li>Random non-sequential public user IDs (12-char hex)</li>
+          <li>Password visibility toggle on all password fields</li>
+          <li>Custom confirm modal — no browser alert() or confirm() dialogs</li>
+          <li>POST-based logout with CSRF token validation</li>
+          <li>Root redirect — visiting / goes to login or dashboard</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DIRECTORY STRUCTURE -->
+    <div class="section">
+      <div class="section-header">Directory Structure</div>
+      <div class="section-body">
+        <div class="file-tree">
 <pre>securepay/
 ├── <span class="dir">.env</span>                          <span class="note">← Your secrets — never commit</span>
 ├── <span class="dir">.env.example</span>                  <span class="note">← Template — copy to .env</span>
-├── <span class="dir">.gitignore</span>                    <span class="note">← certs/ is listed here</span>
-├── Dockerfile                    <span class="note">← COPYs certs/ into image at build time</span>
-├── docker-compose.yml
-├── init.sql                      <span class="note">← Schema with obfuscated column names</span>
-├── setup.sh
-├── index.php                     <span class="note">← / → login or dashboard</span>
-│
-├── <span class="dir">certs/</span>                        <span class="note">← Generated by openssl — never commit</span>
-│   ├── cert.pem                  <span class="note">← Self-signed TLS certificate</span>
-│   └── key.pem                   <span class="note">← Private key</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">docker-compose.yml</span>
+├── <span class="file">init.sql</span>                      <span class="note">← Schema + privilege grants</span>
+├── <span class="file">setup.sh</span>
+├── <span class="file">index.php</span>                     <span class="note">← / → login or dashboard</span>
 │
 ├── <span class="dir">docker/</span>
-│   ├── vhost.conf                <span class="note">← Port 80 → permanent redirect to HTTPS</span>
-│   ├── ssl-vhost.conf            <span class="note">← Port 443 HTTPS vhost, TLS 1.2+, all hardening</span>
-│   └── security.ini              <span class="note">← PHP hardening</span>
+│   ├── <span class="file">vhost.conf</span>                <span class="note">← Apache virtual host (hardened)</span>
+│   └── <span class="file">security.ini</span>              <span class="note">← PHP hardening</span>
 │
 ├── <span class="dir">config/</span>
-│   ├── db.php                    <span class="note">← PDO connection</span>
-│   └── session.php               <span class="note">← Session config, idle timeout constant</span>
+│   ├── <span class="file">db.php</span>                    <span class="note">← PDO connection</span>
+│   └── <span class="file">session.php</span>               <span class="note">← Session config + helpers</span>
 │
 ├── <span class="dir">includes/</span>
-│   ├── auth_guard.php            <span class="note">← Auth check + 30-min idle timeout enforcement</span>
-│   ├── csrf.php
-│   ├── security_headers.php
-│   ├── header.php
-│   ├── footer.php
-│   ├── logger.php
-│   ├── upload_handler.php
-│   └── transfer_handler.php
+│   ├── <span class="file">auth_guard.php</span>            <span class="note">← Redirects guests to login</span>
+│   ├── <span class="file">csrf.php</span>                  <span class="note">← Token generate/validate</span>
+│   ├── <span class="file">security_headers.php</span>      <span class="note">← HTTP security headers</span>
+│   ├── <span class="file">header.php</span>                <span class="note">← HTML head + nav (POST logout)</span>
+│   ├── <span class="file">footer.php</span>                <span class="note">← Closes HTML, loads JS</span>
+│   ├── <span class="file">logger.php</span>                <span class="note">← Activity log file + DB</span>
+│   ├── <span class="file">upload_handler.php</span>        <span class="note">← 5-layer image validation</span>
+│   └── <span class="file">transfer_handler.php</span>      <span class="note">← Atomic transfer with lock</span>
 │
 ├── <span class="dir">assets/</span>
-│   ├── style.css
-│   └── script.js
+│   ├── <span class="file">style.css</span>                 <span class="note">← Retro ATM theme</span>
+│   └── <span class="file">script.js</span>                 <span class="note">← PW toggle, modal, counters</span>
 │
-├── register.php / login.php / logout.php
-├── dashboard.php / profile.php / profile_view.php
-├── search.php / transfer.php / transaction_history.php
-├── serve_image.php
-├── admin_login.php / admin_logs.php
-│
-├── logs/                         <span class="note">← Auto-created by Docker</span>
-└── private_uploads/              <span class="note">← Auto-created by Docker</span></pre>
+├── <span class="file">index.php</span>
+├── <span class="file">register.php</span>
+├── <span class="file">login.php</span>
+├── <span class="file">logout.php</span>
+├── <span class="file">dashboard.php</span>
+├── <span class="file">profile.php</span>
+├── <span class="file">profile_view.php</span>              <span class="note">← URL uses public_id, not int id</span>
+├── <span class="file">serve_image.php</span>               <span class="note">← Auth-gated image proxy</span>
+├── <span class="file">search.php</span>
+├── <span class="file">transfer.php</span>
+├── <span class="file">transaction_history.php</span>
+├── <span class="file">admin_login.php</span>
+└── <span class="file">admin_logs.php</span></pre>
+        </div>
+        <p style="font-size:0.78rem; color:var(--text-dim); margin-top:12px;">
+          <code>logs/</code> and <code>private_uploads/</code> are created automatically on first <code>docker compose up</code> via bind mounts.
+        </p>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- HTTPS SETUP -->
-<div class="section">
-  <div class="section-header">HTTPS Setup — Local Development</div>
-  <div class="section-body">
-    <h2>How It Works</h2>
-    <p>Apache runs two virtual hosts. Port 80 does nothing except redirect every request permanently to HTTPS. Port 443 is the real application vhost with TLS enabled. The certificate is a self-signed cert generated locally with openssl and copied into the Docker image at build time.</p>
+    <!-- DATABASE SCHEMA -->
+    <div class="section">
+      <div class="section-header">Database Schema</div>
+      <div class="section-body">
 
-    <h2>Step 1 — Generate the certificate</h2>
-    <p>Run this once inside your project folder before building. It creates both files in <code>certs/</code>:</p>
-    <pre>mkdir -p certs && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout certs/key.pem \
-  -out    certs/cert.pem \
-  -subj "/C=IN/ST=Telangana/L=Hyderabad/O=SecurePay/CN=localhost"</pre>
-    <p>Verify the files exist before building:</p>
-    <pre>ls -lh certs/</pre>
-    <p>Both <code>cert.pem</code> (~1.2KB) and <code>key.pem</code> (~1.7KB) must be present. The Dockerfile <code>COPY certs/</code> line bakes them into the image — if they are missing, the build fails.</p>
+        <h2>users</h2>
+        <table>
+          <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td><code>id</code></td><td>INT UNSIGNED PK</td><td class="mid">Internal only — never shown to users</td></tr>
+          <tr><td><code>public_id</code></td><td>VARCHAR(12) UNIQUE</td><td class="good">12-char hex — used in URLs and UI</td></tr>
+          <tr><td><code>username</code></td><td>VARCHAR(30) UNIQUE</td><td>Permanent, alphanumeric + underscore</td></tr>
+          <tr><td><code>email</code></td><td>VARCHAR(254) UNIQUE</td><td></td></tr>
+          <tr><td><code>password_hash</code></td><td>VARCHAR(255)</td><td>bcrypt cost 12</td></tr>
+          <tr><td><code>balance</code></td><td>DECIMAL(12,2)</td><td>DEFAULT 100.00, CHECK >= 0</td></tr>
+          <tr><td><code>full_name</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
+          <tr><td><code>bio</code></td><td>TEXT NULL</td><td></td></tr>
+          <tr><td><code>profile_image</code></td><td>VARCHAR(64) NULL</td><td>Filename only — not path</td></tr>
+          <tr><td><code>created_at</code></td><td>DATETIME</td><td></td></tr>
+          <tr><td><code>updated_at</code></td><td>DATETIME</td><td>ON UPDATE CURRENT_TIMESTAMP</td></tr>
+        </table>
 
-    <h2>Step 2 — Build and start</h2>
-    <pre>docker compose up --build -d</pre>
-    <p>The <code>--build</code> flag is required on first run and any time you regenerate the certificate. Without it Docker reuses the cached image and the new cert files will not be present inside the container.</p>
+        <h2>transactions</h2>
+        <table>
+          <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td><code>id</code></td><td>INT UNSIGNED PK</td><td></td></tr>
+          <tr><td><code>sender_id</code></td><td>FK → users(id)</td><td>ON DELETE RESTRICT</td></tr>
+          <tr><td><code>receiver_id</code></td><td>FK → users(id)</td><td>ON DELETE RESTRICT</td></tr>
+          <tr><td><code>amount</code></td><td>DECIMAL(12,2)</td><td>CHECK > 0</td></tr>
+          <tr><td><code>comment</code></td><td>VARCHAR(500) NULL</td><td></td></tr>
+          <tr><td><code>created_at</code></td><td>DATETIME</td><td></td></tr>
+        </table>
+        <p style="font-size:0.78rem; color:var(--text-dim);">Constraint: <code>sender_id != receiver_id</code></p>
 
-    <h2>Step 3 — Accept the browser warning</h2>
-    <p>Visit <strong>https://localhost</strong>. You will see a security warning because the cert is self-signed rather than issued by a trusted CA. The connection is still fully encrypted. Accept once:</p>
-    <table>
-      <tr><th>Browser</th><th>Steps</th></tr>
-      <tr><td>Chrome</td><td>Click <strong>Advanced</strong> → <strong>Proceed to localhost (unsafe)</strong></td></tr>
-      <tr><td>Firefox</td><td>Click <strong>Advanced</strong> → <strong>Accept the Risk and Continue</strong></td></tr>
-    </table>
+        <h2>Other Tables</h2>
+        <table>
+          <tr><th>Table</th><th>Purpose</th></tr>
+          <tr><td><code>login_attempts</code></td><td>Per-IP rate limiting — 5 fails / 15 min</td></tr>
+          <tr><td><code>activity_log</code></td><td>Every page visit: username, page, IP, timestamp</td></tr>
+          <tr><td><code>admins</code></td><td>Admin credentials — completely separate from users</td></tr>
+        </table>
 
-    <h2>TLS Configuration</h2>
-    <table>
-      <tr><th>Setting</th><th>Value</th></tr>
-      <tr><td>Certificate type</td><td class="mid">Self-signed (openssl), valid 365 days</td></tr>
-      <tr><td>Cert location in container</td><td><code>/etc/apache2/ssl/cert.pem</code></td></tr>
-      <tr><td>Key location in container</td><td><code>/etc/apache2/ssl/key.pem</code></td></tr>
-      <tr><td>Protocols allowed</td><td class="good">TLS 1.2 and TLS 1.3 only</td></tr>
-      <tr><td>Protocols disabled</td><td>SSLv3, TLS 1.0, TLS 1.1</td></tr>
-      <tr><td>HSTS</td><td><code>max-age=31536000; includeSubDomains</code></td></tr>
-      <tr><td>HTTP port 80</td><td>Permanent redirect to HTTPS — no content served</td></tr>
-      <tr><td>Cookie secure flag</td><td><code>true</code> — cookie never sent over HTTP</td></tr>
-    </table>
-  </div>
-</div>
+        <p style="margin-top:12px; font-size:0.82rem;">App DB user <code>spuser</code> has SELECT, INSERT, UPDATE, DELETE only — no DROP, ALTER, or GRANT.</p>
+      </div>
+    </div>
 
-<!-- DATABASE SCHEMA -->
-<div class="section">
-  <div class="section-header">Database Schema (Obfuscated Column Names)</div>
-  <div class="section-body">
-    <h2>users</h2>
-    <table>
-      <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
-      <tr><td><code>acct_ref</code></td><td>INT UNSIGNED PK</td><td class="mid">Internal only — never shown to users</td></tr>
-      <tr><td><code>acct_token</code></td><td>VARCHAR(12) UNIQUE</td><td class="good">12-char hex — used in URLs and UI</td></tr>
-      <tr><td><code>handle</code></td><td>VARCHAR(30) UNIQUE</td><td>Login username — permanent</td></tr>
-      <tr><td><code>contact_addr</code></td><td>VARCHAR(254) UNIQUE</td><td>Email address</td></tr>
-      <tr><td><code>auth_digest</code></td><td>VARCHAR(255)</td><td>bcrypt cost 12</td></tr>
-      <tr><td><code>ledger_bal</code></td><td>DECIMAL(12,2)</td><td>DEFAULT 100.00, CHECK >= 0</td></tr>
-      <tr><td><code>display_name</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
-      <tr><td><code>profile_text</code></td><td>TEXT NULL</td><td></td></tr>
-      <tr><td><code>avatar_file</code></td><td>VARCHAR(64) NULL</td><td>Filename only — not path</td></tr>
-      <tr><td><code>enrolled_at</code></td><td>DATETIME</td><td></td></tr>
-      <tr><td><code>modified_at</code></td><td>DATETIME</td><td>ON UPDATE CURRENT_TIMESTAMP</td></tr>
-    </table>
-    <h2>transactions</h2>
-    <table>
-      <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
-      <tr><td><code>txn_ref</code></td><td>INT UNSIGNED PK</td><td></td></tr>
-      <tr><td><code>debit_acct</code></td><td>FK → users(acct_ref)</td><td>ON DELETE RESTRICT</td></tr>
-      <tr><td><code>credit_acct</code></td><td>FK → users(acct_ref)</td><td>ON DELETE RESTRICT</td></tr>
-      <tr><td><code>txn_amount</code></td><td>DECIMAL(12,2)</td><td>CHECK > 0</td></tr>
-      <tr><td><code>txn_note</code></td><td>VARCHAR(500) NULL</td><td></td></tr>
-      <tr><td><code>txn_at</code></td><td>DATETIME</td><td></td></tr>
-    </table>
-    <p style="font-size:.78rem;color:var(--text-dim);margin-top:8px;">Constraint: <code>debit_acct != credit_acct</code></p>
-    <h2>Other Tables</h2>
-    <table>
-      <tr><th>Table</th><th>Key Columns</th><th>Purpose</th></tr>
-      <tr><td><code>login_attempts</code></td><td>origin_ip, attempt_at</td><td>Per-IP rate limiting</td></tr>
-      <tr><td><code>activity_log</code></td><td>actor_handle, endpoint, origin_ip, log_at</td><td>Every page visit</td></tr>
-      <tr><td><code>admins</code></td><td>admin_handle, auth_digest</td><td>Admin credentials — separate from users</td></tr>
-    </table>
-  </div>
-</div>
+    <!-- SECURITY ARCHITECTURE -->
+    <div class="section">
+      <div class="section-header">Security Architecture</div>
+      <div class="section-body">
 
-<!-- RUNNING -->
-<div class="section">
-  <div class="section-header">Running the Application</div>
-  <div class="section-body">
-    <h2>1. Environment file</h2>
-    <pre>cp .env.example .env
-# Set DB_PASS and MYSQL_ROOT_PASSWORD — use: openssl rand -base64 32</pre>
+        <h2>Authentication</h2>
+        <table>
+          <tr><th>Threat</th><th>Control</th></tr>
+          <tr><td>Brute force</td><td>5 attempts/IP/15 min → DB lockout</td></tr>
+          <tr><td>Timing-based username enumeration</td><td>Dummy hash compared on unknown user</td></tr>
+          <tr><td>Message-based username enumeration</td><td>Single "Invalid credentials" message</td></tr>
+          <tr><td>Session fixation</td><td><code>session_regenerate_id(true)</code> on login</td></tr>
+          <tr><td>Session cookie theft via XSS</td><td><code>httponly=1, samesite=Strict</code></td></tr>
+          <tr><td>Stale session after logout</td><td>Three-step destroy: clear array + delete file + expire cookie</td></tr>
+          <tr><td>Cached page after logout</td><td><code>Cache-Control: no-store</code> on all PHP</td></tr>
+          <tr><td>CSRF-forced logout</td><td>Logout is POST-only with CSRF token</td></tr>
+          <tr><td>Logout via URL bar</td><td>GET to logout.php is silently ignored</td></tr>
+        </table>
 
-    <h2>2. Generate certificate</h2>
-    <pre>mkdir -p certs && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout certs/key.pem \
-  -out    certs/cert.pem \
-  -subj "/C=IN/ST=Telangana/L=Hyderabad/O=SecurePay/CN=localhost"</pre>
+        <h2>User ID Design</h2>
+        <table>
+          <tr><th>Old</th><th>Problem</th><th>New</th></tr>
+          <tr>
+            <td class="bad">Sequential integer (1, 2, 3…)</td>
+            <td>Attacker enumerates all accounts by incrementing</td>
+            <td class="good"><code>bin2hex(random_bytes(6))</code> = 12-char hex</td>
+          </tr>
+        </table>
+        <p style="font-size:0.82rem; margin-top:8px;">Internal <code>id</code> (INT) is used only for FK relationships — stays on the server. <code>public_id</code> is used in all URLs. Transfers use username — no ID ever enters the browser.</p>
 
-    <h2>3. Build and start</h2>
-    <pre>docker compose up --build -d</pre>
+        <h2>Money Transfer Security</h2>
+        <table>
+          <tr><th>Step</th><th>Control</th></tr>
+          <tr><td>Sender identity</td><td>From <code>$_SESSION['user_id']</code> — never from POST</td></tr>
+          <tr><td>Recipient lookup</td><td>By username server-side — internal IDs never sent to browser</td></tr>
+          <tr><td>Atomicity</td><td><code>BEGIN TRANSACTION</code> wraps deduct + credit + log</td></tr>
+          <tr><td>Race condition / double-spend</td><td><code>SELECT ... FOR UPDATE</code> row lock on sender</td></tr>
+          <tr><td>Insufficient funds</td><td><code>UPDATE WHERE balance >= amount</code> — atomic check</td></tr>
+          <tr><td>Self-transfer</td><td>Rejected explicitly before transaction begins</td></tr>
+          <tr><td>Float errors</td><td><code>round($amount, 2)</code> + <code>DECIMAL(12,2)</code> in DB</td></tr>
+        </table>
 
-    <h2>4. Create admin account</h2>
-    <pre>docker exec securepay_app php -r \
-  "echo password_hash('YourAdminPass123!', PASSWORD_BCRYPT, ['cost'=>12]);"
+        <h2>Image Upload (5 Layers)</h2>
+        <table>
+          <tr><th>Layer</th><th>Check</th></tr>
+          <tr><td>1</td><td><code>$_FILES['error'] === UPLOAD_ERR_OK</code></td></tr>
+          <tr><td>2</td><td><code>filesize($tmp_name)</code> ≤ 2MB — not <code>$_FILES['size']</code> which can be forged</td></tr>
+          <tr><td>3</td><td><code>finfo(FILEINFO_MIME_TYPE)</code> reads magic bytes — not filename/extension</td></tr>
+          <tr><td>4</td><td>Extension whitelisted against detected MIME type</td></tr>
+          <tr><td>5</td><td><code>getimagesize()</code> — file must parse as a valid image</td></tr>
+        </table>
+        <p style="font-size:0.82rem; margin-top:8px;">Stored in <code>/var/www/private/uploads/</code> — outside Apache webroot. Random filename: <code>bin2hex(random_bytes(16)) . '.' . $ext</code>. User's original filename is discarded.</p>
+
+        <h2>HTTP Headers</h2>
+        <pre>X-Content-Type-Options:  nosniff
+X-Frame-Options:         DENY
+X-XSS-Protection:        1; mode=block
+Referrer-Policy:         strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'self'; object-src 'none'; frame-ancestors 'none'
+Cache-Control:           no-store, no-cache, must-revalidate  (all PHP/HTML)</pre>
+        <p style="font-size:0.78rem; color:var(--text-dim);">Set in PHP (<code>security_headers.php</code>) and duplicated at Apache level in <code>vhost.conf</code>. Two layers: if PHP crashes before headers are sent, Apache still sends them.</p>
+
+        <h2>Apache — vhost.conf</h2>
+        <pre>DirectoryIndex login.php         # / → login
+Options -Indexes -FollowSymLinks # no directory listings, no symlink escapes
+AllowOverride None               # on config/ and includes/ (explicitly)
+Require all denied               # on config/, includes/, /var/www/private</pre>
+
+        <h2>PHP — security.ini</h2>
+        <pre>expose_php         = Off
+display_errors     = Off
+allow_url_fopen    = Off
+allow_url_include  = Off
+open_basedir       = /var/www/html:/var/www/private:/tmp
+disable_functions  = exec,passthru,shell_exec,system,proc_open,popen,...</pre>
+
+        <h2>Docker — Containers</h2>
+        <table>
+          <tr><th>Setting</th><th>Effect</th></tr>
+          <tr><td><code>no-new-privileges: true</code></td><td>Process cannot escalate privileges</td></tr>
+          <tr><td><code>cap_drop: ALL</code></td><td>All 14 Linux capabilities stripped</td></tr>
+          <tr><td>App: <code>cap_add: NET_BIND_SERVICE</code></td><td>Allows Apache to bind port 80</td></tr>
+          <tr><td>DB: no <code>ports:</code> entry</td><td>MySQL not reachable from outside Docker</td></tr>
+          <tr><td>DB: explicit subnet</td><td>Prevents overlap with corporate VPN/LAN</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- SETUP -->
+    <div class="section">
+      <div class="section-header">Setup and Running</div>
+      <div class="section-body">
+
+        <h2>1. Environment File</h2>
+        <pre>cp .env.example .env</pre>
+        <table>
+          <tr><th>Variable</th><th>Value</th></tr>
+          <tr><td><code>DB_NAME</code></td><td>securepay</td></tr>
+          <tr><td><code>DB_HOST</code></td><td>db &nbsp;<em>(Docker service name)</em></td></tr>
+          <tr><td><code>DB_PORT</code></td><td>3306</td></tr>
+          <tr><td><code>DB_USER</code></td><td>spuser</td></tr>
+          <tr><td><code>DB_PASS</code></td><td><strong>Strong random password</strong></td></tr>
+          <tr><td><code>MYSQL_ROOT_PASSWORD</code></td><td><strong>Different strong password</strong></td></tr>
+        </table>
+        <p style="font-size:0.78rem; color:var(--text-dim); margin-top:8px;">Generate: <code>openssl rand -base64 32</code></p>
+
+        <h2>2. First Run</h2>
+        <pre>chmod +x setup.sh && ./setup.sh
+# or:
+docker compose up --build -d</pre>
+
+        <h2>3. Schema Upgrade</h2>
+        <p style="font-size:0.82rem;">If upgrading from a previous version — the schema now has a <code>public_id</code> column. You must wipe the old volume:</p>
+        <pre>docker compose down -v   # WARNING: deletes all data
+docker compose up --build -d</pre>
+
+        <h2>4. Create Admin Account</h2>
+        <pre>docker exec securepay_app php -r \
+  "echo password_hash('YourAdminPass!', PASSWORD_BCRYPT, ['cost'=>12]);"
 
 docker exec -it securepay_db mysql -u root -p
 # USE securepay;
-# INSERT INTO admins (admin_handle, auth_digest) VALUES ('admin', '&lt;hash&gt;');
-# EXIT;</pre>
+# INSERT INTO admins (username, password_hash) VALUES ('admin', '&lt;hash&gt;');</pre>
 
-    <h2>5. URLs — all HTTPS</h2>
-    <table class="url-table">
-      <tr><td>https://localhost/</td><td>Auto-redirect to login or dashboard</td></tr>
-      <tr><td>https://localhost/register.php</td><td>Create account</td></tr>
-      <tr><td>https://localhost/login.php</td><td>Sign in</td></tr>
-      <tr><td>https://localhost/dashboard.php</td><td>Balance + recent transactions</td></tr>
-      <tr><td>https://localhost/profile.php</td><td>Edit profile, upload avatar</td></tr>
-      <tr><td>https://localhost/search.php</td><td>Find users by username</td></tr>
-      <tr><td>https://localhost/transfer.php</td><td>Send money by username</td></tr>
-      <tr><td>https://localhost/transaction_history.php</td><td>Full paginated history</td></tr>
-      <tr><td>https://localhost/admin_login.php</td><td>Admin sign in</td></tr>
-      <tr><td>https://localhost/admin_logs.php</td><td>Activity log viewer</td></tr>
-    </table>
+        <h2>5. URLs</h2>
+        <table class="url-table">
+          <tr><td>http://localhost:8080/</td><td>Auto-redirect to login or dashboard</td></tr>
+          <tr><td>http://localhost:8080/register.php</td><td>Create account</td></tr>
+          <tr><td>http://localhost:8080/login.php</td><td>Sign in</td></tr>
+          <tr><td>http://localhost:8080/dashboard.php</td><td>Balance + recent transactions</td></tr>
+          <tr><td>http://localhost:8080/profile.php</td><td>Edit profile, upload avatar</td></tr>
+          <tr><td>http://localhost:8080/search.php</td><td>Find users by username</td></tr>
+          <tr><td>http://localhost:8080/transfer.php</td><td>Send money by username</td></tr>
+          <tr><td>http://localhost:8080/transaction_history.php</td><td>Paginated full history</td></tr>
+          <tr><td>http://localhost:8080/admin_login.php</td><td>Admin sign in</td></tr>
+          <tr><td>http://localhost:8080/admin_logs.php</td><td>Activity log viewer</td></tr>
+        </table>
+      </div>
+    </div>
 
-    <h2>6. Stop</h2>
-    <pre>docker compose down       # keeps database
-docker compose down -v    # wipes database</pre>
+    <!-- TEST CHECKLIST -->
+    <div class="section">
+      <div class="section-header">Test Checklist</div>
+      <div class="section-body">
+
+        <div class="test-group">
+          <div class="test-group-title">Registration</div>
+          <div class="test-item"><div class="test-box"></div>Register with valid data → Rs. 100 credited, redirected to login</div>
+          <div class="test-item"><div class="test-box"></div>Register duplicate username → generic "already exists" (no info leak)</div>
+          <div class="test-item"><div class="test-box"></div>Weak password (short / no uppercase / no number) → rejected</div>
+          <div class="test-item"><div class="test-box"></div>Mismatched passwords → rejected</div>
+          <div class="test-item"><div class="test-box"></div>Check DB: <code>public_id</code> is 12-char hex, not sequential integer</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Login</div>
+          <div class="test-item"><div class="test-box"></div>Correct credentials → dashboard</div>
+          <div class="test-item"><div class="test-box"></div>Wrong password → "Invalid credentials" (no field distinction)</div>
+          <div class="test-item"><div class="test-box"></div>Unknown username → same message, same response time</div>
+          <div class="test-item"><div class="test-box"></div>5 failures from same IP → 15-min lockout</div>
+          <div class="test-item"><div class="test-box"></div>Correct credentials during lockout still blocked</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Password Visibility</div>
+          <div class="test-item"><div class="test-box"></div>Eye button toggles type between password/text on login page</div>
+          <div class="test-item"><div class="test-box"></div>Eye button works on both password fields on register page</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Logout</div>
+          <div class="test-item"><div class="test-box"></div>LOGOUT button works — session destroyed, redirected to login</div>
+          <div class="test-item"><div class="test-box"></div>Back button after logout → login page (cache headers working)</div>
+          <div class="test-item"><div class="test-box"></div>Visit /logout.php in URL bar → redirected, NOT logged out</div>
+          <div class="test-item"><div class="test-box"></div>Exactly one LOGOUT button visible in nav</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Root Redirect</div>
+          <div class="test-item"><div class="test-box"></div>Visit http://localhost:8080/ unauthenticated → login page</div>
+          <div class="test-item"><div class="test-box"></div>Visit http://localhost:8080/ authenticated → dashboard</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Profile and Image Upload</div>
+          <div class="test-item"><div class="test-box"></div>Edit name and bio → saved correctly</div>
+          <div class="test-item"><div class="test-box"></div>Upload valid JPG → image displays on profile</div>
+          <div class="test-item"><div class="test-box"></div>Upload PHP file → rejected at MIME check</div>
+          <div class="test-item"><div class="test-box"></div>Upload file > 2MB → rejected at size check</div>
+          <div class="test-item"><div class="test-box"></div>Upload PHP file renamed to .jpg → rejected (magic bytes check)</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Search</div>
+          <div class="test-item"><div class="test-box"></div>Search own username → appears in results marked "(you)"</div>
+          <div class="test-item"><div class="test-box"></div>Own account shows VIEW only — no SEND button</div>
+          <div class="test-item"><div class="test-box"></div>Another user shows VIEW and SEND buttons</div>
+          <div class="test-item"><div class="test-box"></div>SEND prefills recipient username in transfer form</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Transfers</div>
+          <div class="test-item"><div class="test-box"></div>Transfer to valid username → balances updated, transaction recorded</div>
+          <div class="test-item"><div class="test-box"></div>Amount exceeds balance → "Insufficient balance" error</div>
+          <div class="test-item"><div class="test-box"></div>Transfer to self → rejected</div>
+          <div class="test-item"><div class="test-box"></div>Transfer to nonexistent username → "User not found"</div>
+          <div class="test-item"><div class="test-box"></div>REVIEW TRANSFER shows modal (not browser alert)</div>
+          <div class="test-item"><div class="test-box"></div>CANCEL in modal → form not submitted</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Security</div>
+          <div class="test-item"><div class="test-box"></div>Visit /dashboard.php without login → redirect to login</div>
+          <div class="test-item"><div class="test-box"></div>Visit /config/db.php directly → 403 Forbidden</div>
+          <div class="test-item"><div class="test-box"></div>Visit /includes/csrf.php directly → 403 Forbidden</div>
+          <div class="test-item"><div class="test-box"></div>POST transfer without CSRF token → 403</div>
+          <div class="test-item"><div class="test-box"></div>POST logout without CSRF token → 403</div>
+          <div class="test-item"><div class="test-box"></div>Response headers: X-Frame-Options DENY, nosniff present</div>
+        </div>
+
+        <div class="test-group">
+          <div class="test-group-title">Admin</div>
+          <div class="test-item"><div class="test-box"></div>Login at /admin_login.php → logs panel</div>
+          <div class="test-item"><div class="test-box"></div>Filter by username, IP, date → results update</div>
+          <div class="test-item"><div class="test-box"></div>Wrong admin password 3 times → admin lockout</div>
+          <div class="test-item"><div class="test-box"></div>Visit /admin_logs.php without admin session → redirected</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ATTACK SURFACE -->
+    <div class="section">
+      <div class="section-header">Attack Surface Summary</div>
+      <div class="section-body">
+        <table>
+          <tr><th>Category</th><th>Attack</th><th>Mitigation</th></tr>
+          <tr><td>Injection</td><td>SQL injection</td><td>PDO prepared statements + <code>EMULATE_PREPARES false</code></td></tr>
+          <tr><td>Injection</td><td>LIKE wildcard injection</td><td><code>addcslashes($term, '%_')</code></td></tr>
+          <tr><td>Injection</td><td>Log injection</td><td>Strips <code>\n \r \v \f \0 |</code> from log values</td></tr>
+          <tr><td>Injection</td><td>Path traversal in uploads</td><td>Random filename, <code>basename()</code> on all file paths</td></tr>
+          <tr><td>XSS</td><td>Stored / reflected XSS</td><td><code>htmlspecialchars()</code> on all output + CSP header</td></tr>
+          <tr><td>XSS</td><td>Cookie theft via XSS</td><td><code>httponly</code> session cookie flag</td></tr>
+          <tr><td>CSRF</td><td>Forged POST requests</td><td>Tokens on all forms, <code>hash_equals()</code> validation</td></tr>
+          <tr><td>CSRF</td><td>Forged logout</td><td>Logout POST-only — GET ignored</td></tr>
+          <tr><td>Auth</td><td>Brute force</td><td>5 attempts/IP/15 min rate limit in DB</td></tr>
+          <tr><td>Auth</td><td>Timing enumeration</td><td>Dummy hash compared when user not found</td></tr>
+          <tr><td>Auth</td><td>Message enumeration</td><td>Generic "Invalid credentials" always</td></tr>
+          <tr><td>Auth</td><td>Session fixation</td><td><code>session_regenerate_id(true)</code> on login</td></tr>
+          <tr><td>Auth</td><td>Stale session</td><td>Three-step destroy + <code>Cache-Control: no-store</code></td></tr>
+          <tr><td>IDOR</td><td>Access other users' data</td><td>All WHERE clauses use <code>$_SESSION['user_id']</code></td></tr>
+          <tr><td>IDOR</td><td>Enumerate accounts by ID</td><td>Sequential INT replaced with 12-char random hex</td></tr>
+          <tr><td>Transfer</td><td>Sender spoofing</td><td>Sender from <code>$_SESSION</code> — never from POST body</td></tr>
+          <tr><td>Transfer</td><td>Race / double-spend</td><td><code>SELECT FOR UPDATE</code> + DB transaction</td></tr>
+          <tr><td>Upload</td><td>Malicious file execution</td><td>Files outside webroot, <code>open_basedir</code>, <code>disable_functions</code></td></tr>
+          <tr><td>Upload</td><td>MIME type spoofing</td><td>Magic byte check via <code>finfo</code></td></tr>
+          <tr><td>Upload</td><td>Size forgery</td><td><code>filesize($tmp_name)</code> — not <code>$_FILES['size']</code></td></tr>
+          <tr><td>Container</td><td>Privilege escalation</td><td><code>no-new-privileges:true</code>, <code>cap_drop: ALL</code></td></tr>
+          <tr><td>Container</td><td>Direct DB access</td><td>No <code>ports:</code> on MySQL — internal network only</td></tr>
+          <tr><td>Container</td><td>Sensitive files in webroot</td><td>Dockerfile copies only PHP app files explicitly</td></tr>
+          <tr><td>Headers</td><td>Clickjacking</td><td><code>X-Frame-Options: DENY</code></td></tr>
+          <tr><td>Headers</td><td>MIME sniffing</td><td><code>X-Content-Type-Options: nosniff</code></td></tr>
+          <tr><td>Headers</td><td>Server fingerprinting</td><td><code>expose_php Off</code>, <code>display_errors Off</code></td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div class="page-footer">
+    <span>SECUREPAY BANKING TERMINAL — TECHNICAL DOCUMENTATION v2.0</span>
+    <span>CONFIDENTIAL &nbsp;|&nbsp; PHP 8.2 + MySQL 8.0 + Docker</span>
   </div>
-</div>
-
-<!-- TEST CHECKLIST -->
-<div class="section">
-  <div class="section-header">Test Checklist</div>
-  <div class="section-body">
-
-    <div class="test-group">
-      <div class="test-group-title">HTTPS</div>
-      <div class="test-item"><div class="test-box"></div>Visit http://localhost → automatically redirects to https://localhost</div>
-      <div class="test-item"><div class="test-box"></div>Browser shows padlock (warning expected for self-signed — accept once)</div>
-      <div class="test-item"><div class="test-box"></div>Response header includes Strict-Transport-Security</div>
-      <div class="test-item"><div class="test-box"></div>Response header includes X-Frame-Options: DENY</div>
-    </div>
-
-    <div class="test-group">
-      <div class="test-group-title">Session Behaviour</div>
-      <div class="test-item"><div class="test-box"></div>Close browser, reopen → must log in again (session cookie, not persistent)</div>
-      <div class="test-item"><div class="test-box"></div>Stay idle 30 minutes → redirected to login with expiry message</div>
-      <div class="test-item"><div class="test-box"></div>Back button after logout → login page (cache headers working)</div>
-    </div>
-
-    <div class="test-group">
-      <div class="test-group-title">Registration and Login</div>
-      <div class="test-item"><div class="test-box"></div>Register → Rs. 100 credited, redirect to login</div>
-      <div class="test-item"><div class="test-box"></div>Duplicate username/email → generic error, no field distinction</div>
-      <div class="test-item"><div class="test-box"></div>Wrong credentials → same "Invalid credentials" message regardless of which field</div>
-      <div class="test-item"><div class="test-box"></div>5 failures from same IP → 30-min lockout</div>
-    </div>
-
-    <div class="test-group">
-      <div class="test-group-title">Transfers</div>
-      <div class="test-item"><div class="test-box"></div>Transfer to valid user → balances updated correctly</div>
-      <div class="test-item"><div class="test-box"></div>Transfer exceeding balance → "Insufficient balance"</div>
-      <div class="test-item"><div class="test-box"></div>Transfer to self → rejected</div>
-      <div class="test-item"><div class="test-box"></div>REVIEW TRANSFER shows modal — not browser alert</div>
-    </div>
-
-    <div class="test-group">
-      <div class="test-group-title">Security</div>
-      <div class="test-item"><div class="test-box"></div>Visit /dashboard.php without login → redirect to login</div>
-      <div class="test-item"><div class="test-box"></div>Visit /config/db.php → 403 Forbidden</div>
-      <div class="test-item"><div class="test-box"></div>POST transfer without CSRF token → 403</div>
-      <div class="test-item"><div class="test-box"></div>Visit /logout.php in address bar → redirected, NOT logged out</div>
-    </div>
-
-    <div class="test-group">
-      <div class="test-group-title">Admin</div>
-      <div class="test-item"><div class="test-box"></div>Login at /admin_login.php → logs panel visible</div>
-      <div class="test-item"><div class="test-box"></div>Filter by handle, IP, page URL → results update</div>
-      <div class="test-item"><div class="test-box"></div>3 wrong admin passwords → 30-min lockout</div>
-      <div class="test-item"><div class="test-box"></div>Visit /admin_logs.php without admin session → redirected</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ATTACK SURFACE -->
-<div class="section">
-  <div class="section-header">Attack Surface Summary</div>
-  <div class="section-body">
-    <table>
-      <tr><th>Category</th><th>Attack</th><th>Mitigation</th></tr>
-      <tr><td>Transport</td><td>Plain HTTP interception</td><td>Port 80 redirects to HTTPS permanently</td></tr>
-      <tr><td>Transport</td><td>Downgrade attack</td><td>HSTS header forces HTTPS for 1 year</td></tr>
-      <tr><td>Transport</td><td>Weak TLS</td><td>SSLv3, TLS 1.0, TLS 1.1 disabled — TLS 1.2+ only</td></tr>
-      <tr><td>Transport</td><td>Cookie sent over HTTP</td><td><code>cookie_secure = true</code></td></tr>
-      <tr><td>Injection</td><td>SQL injection</td><td>PDO prepared statements, EMULATE_PREPARES false</td></tr>
-      <tr><td>Injection</td><td>LIKE wildcard injection</td><td><code>addcslashes($term, '%_')</code></td></tr>
-      <tr><td>Injection</td><td>Log injection</td><td>Strips newlines, pipes, null bytes from all log values</td></tr>
-      <tr><td>Injection</td><td>Path traversal in uploads</td><td>Random filename, basename() on all paths</td></tr>
-      <tr><td>XSS</td><td>Stored / reflected XSS</td><td>htmlspecialchars() on all output + CSP header</td></tr>
-      <tr><td>XSS</td><td>Cookie theft via XSS</td><td>httponly session cookie flag</td></tr>
-      <tr><td>CSRF</td><td>Forged POST requests</td><td>Tokens on all forms, hash_equals() validation</td></tr>
-      <tr><td>CSRF</td><td>Forged logout</td><td>Logout POST-only — GET ignored</td></tr>
-      <tr><td>Auth</td><td>Brute force</td><td>5 attempts/IP/30 min rate limit in DB</td></tr>
-      <tr><td>Auth</td><td>Timing enumeration</td><td>Dummy hash compared when user not found</td></tr>
-      <tr><td>Auth</td><td>Message enumeration</td><td>Generic "Invalid credentials" always</td></tr>
-      <tr><td>Auth</td><td>Session fixation</td><td>session_regenerate_id(true) on login</td></tr>
-      <tr><td>Auth</td><td>Session survives browser close</td><td>Cookie lifetime = 0 (session cookie)</td></tr>
-      <tr><td>Auth</td><td>Idle session never expires</td><td>Server-side _last_active check, 30 min timeout</td></tr>
-      <tr><td>Auth</td><td>Stale session after logout</td><td>Three-step destroy: array + file + cookie</td></tr>
-      <tr><td>Auth</td><td>Cached page after logout</td><td>Cache-Control: no-store on all PHP</td></tr>
-      <tr><td>IDOR</td><td>Access other users' data</td><td>All WHERE clauses use $_SESSION user_id</td></tr>
-      <tr><td>IDOR</td><td>Enumerate accounts by ID</td><td>Sequential INT replaced with random acct_token</td></tr>
-      <tr><td>Schema</td><td>Column name inference from errors</td><td>Obfuscated names: auth_digest, ledger_bal, origin_ip…</td></tr>
-      <tr><td>Transfer</td><td>Sender spoofing</td><td>Sender from $_SESSION — never from POST body</td></tr>
-      <tr><td>Transfer</td><td>Race / double-spend</td><td>SELECT FOR UPDATE + DB transaction</td></tr>
-      <tr><td>Upload</td><td>Malicious file execution</td><td>Files outside webroot, open_basedir, disable_functions</td></tr>
-      <tr><td>Upload</td><td>MIME type spoofing</td><td>Magic byte check via finfo</td></tr>
-      <tr><td>Upload</td><td>Size forgery</td><td>filesize($tmp_name) — not $_FILES['size']</td></tr>
-      <tr><td>Container</td><td>Privilege escalation</td><td>no-new-privileges:true, cap_drop: ALL</td></tr>
-      <tr><td>Container</td><td>Direct DB access</td><td>No ports: on MySQL — internal network only</td></tr>
-      <tr><td>Headers</td><td>Clickjacking</td><td>X-Frame-Options: DENY</td></tr>
-      <tr><td>Headers</td><td>MIME sniffing</td><td>X-Content-Type-Options: nosniff</td></tr>
-      <tr><td>Headers</td><td>Server fingerprinting</td><td>expose_php Off, display_errors Off</td></tr>
-    </table>
-  </div>
-</div>
-
-</div><!-- /content -->
-
-<div class="page-footer">
-  <span>SECUREPAY BANKING TERMINAL — TECHNICAL DOCUMENTATION v3.0</span>
-  <span>PHP 8.2 + MySQL 8.0 + Apache + HTTPS + Docker</span>
-</div>
 
 </div><!-- /wrap -->
 </body>
