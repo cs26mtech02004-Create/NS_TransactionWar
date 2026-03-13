@@ -16,6 +16,8 @@
  *   An attacker who steals the cookie ID can impersonate the user — so we
  *   make the cookie as hard to steal as possible.
  */
+define('SESSION_IDLE_TIMEOUT', 1800); // 30 minutes
+
 
 // SESSION COOKIE SECURITY FLAGS
 // -------------------------------------------------------

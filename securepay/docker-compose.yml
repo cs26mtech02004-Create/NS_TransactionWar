@@ -11,6 +11,7 @@ services:
 
     ports:
       - "8080:80"
+      - "443:443"
 
     environment:
       DB_HOST: ${DB_HOST}
@@ -28,7 +29,7 @@ services:
       # when using this syntax (Docker Compose v2.x behaviour).
       - ./logs:/var/www/private/logs
       - ./private_uploads:/var/www/private/uploads
-
+       # TLS certificate and key — mounted read-only into Apache ssl dir.
     security_opt:
       - no-new-privileges:true
 

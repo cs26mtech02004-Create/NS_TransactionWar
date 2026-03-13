@@ -30,10 +30,18 @@ FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_mysql fileinfo
 
 # ── APACHE MODULES ───────────────────────────────────────────
-# rewrite  — needed for clean URLs and .htaccess rewrites
-# headers  — needed for Header always set ... directives in vhost
+# ssl     — TLS support
+# rewrite — clean URLs and .htaccess rewrites
+# headers — security header directives in vhost
 RUN a2enmod rewrite \
- && a2enmod headers
+ && a2enmod headers \
+ && a2enmod ssl
+ 
+# ── ENABLE SSL SITE ───────────────────────────────────────────
+# a2ensite default-ssl activates Apache's default SSL vhost slot.
+# We overwrite it below with our own ssl-vhost.conf.
+RUN a2ensite default-ssl
+
 
 # ── APACHE GLOBAL HARDENING ──────────────────────────────────
 # Append to apache2.conf (does not overwrite it — safe to append)
@@ -54,6 +62,20 @@ RUN echo "ServerTokens Prod"   >> /etc/apache2/apache2.conf \
 #   docker/security.ini    → PHP hardening settings
 COPY docker/vhost.conf    /etc/apache2/sites-available/000-default.conf
 COPY docker/security.ini  /usr/local/etc/php/conf.d/security.ini
+# HTTPS vhost (port 443 — main application)
+COPY docker/ssl-vhost.conf /etc/apache2/sites-available/default-ssl.conf
+
+
+# ── SSL CERTIFICATE DIRECTORY ─────────────────────────────────
+# The cert and key are NOT baked into the image — they are mounted
+# at runtime via docker-compose.yml volumes. This means you can
+# rotate certificates without rebuilding the image.
+# We just create the directory here so Apache can find it.
+RUN mkdir -p /etc/apache2/ssl && chmod 700 /etc/apache2/ssl
+COPY certs/cert.pem /etc/apache2/ssl/cert.pem
+COPY certs/key.pem  /etc/apache2/ssl/key.pem
+RUN chmod 644 /etc/apache2/ssl/cert.pem \
+ && chmod 600 /etc/apache2/ssl/key.pem
 
 # ── COPY APPLICATION FILES ONLY ──────────────────────────────
 # FIX #5: Copy only the actual PHP application directories — NOT the
@@ -108,4 +130,4 @@ RUN chown -R www-data:www-data /var/www/html    \
  && find /var/www/html    -type d -exec chmod 750 {} \; \
  && chmod -R 750 /var/www/private
 
-EXPOSE 80
+EXPOSE 80 443
