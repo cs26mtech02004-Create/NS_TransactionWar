@@ -1,0 +1,102 @@
+version: '3.8'
+
+# FILE: docker-compose.yml
+
+services:
+
+  app:
+    build: .
+    container_name: securepay_app
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+      - "443:443"
+
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT}
+
+    volumes:
+      # FIXED: Simple bind mounts — most reliable cross-platform approach.
+      # The named volume + local driver approach with ${PWD} does not expand
+      # correctly on all Docker versions and platforms.
+      # Simple bind mounts work identically on Linux, Mac, and Windows.
+      # Docker creates the host directory automatically if it does not exist
+      # when using this syntax (Docker Compose v2.x behaviour).
+      - ./logs:/var/www/private/logs
+      - ./private_uploads:/var/www/private/uploads
+       # TLS certificate and key — mounted read-only into Apache ssl dir.
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    cap_add:
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - securepay_net
+
+  db:
+    image: mysql:8.0
+    container_name: securepay_db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${DB_NAME}
+      MYSQL_USER:          ${DB_USER}
+      MYSQL_PASSWORD:      ${DB_PASS}
+      MYSQL_TCP_PORT:      ${DB_PORT}
+
+    # No ports: entry — MySQL unreachable outside Docker network
+
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db_data:/var/lib/mysql
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    cap_add:
+      # FIXED: NET_BIND_SERVICE added here too — MySQL needs it to bind
+      # to its configured port inside the container.
+      - CHOWN
+      - DAC_OVERRIDE
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    networks:
+      - securepay_net
+
+volumes:
+  db_data:
+
+networks:
+  securepay_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,494 @@
+/* ============================================================
+   FILE: assets/style.css
+   THEME: Retro Indian ATM / early internet banking
+   Clean monospace, phosphor green on dark, minimal chrome.
+   VT323 only for logo + balance. Share Tech Mono for everything else.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+/* ── VARIABLES ────────────────────────────────────────────── */
+:root {
+    --green:         #00e639;
+    --green-dim:     #00992b;
+    --green-glow:    rgba(0,230,57,0.18);
+    --amber:         #f0a500;
+    --amber-dim:     #a86f00;
+    --red:           #e03333;
+    --screen-bg:     #080d08;
+    --panel-bg:      #0b100b;
+    --panel-header:  #0e160e;
+    --border:        #162016;
+    --border-mid:    #1e301e;
+    --border-bright: #1f4a1f;
+    --text-main:     #c8e8c8;
+    --text-green:    #00e639;
+    --text-dim:      #4a7a4a;
+    --text-label:    #6aaa6a;
+    --input-bg:      #060b06;
+    --font-body:     'Share Tech Mono', 'Courier New', monospace;
+    --font-display:  'VT323', monospace;
+}
+
+/* ── RESET ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+
+body {
+    min-height: 100%;
+    background: var(--screen-bg);
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.18) 3px,
+        rgba(0,0,0,0.18) 4px
+    );
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0.06em;
+    color: var(--text-green);
+}
+h1 { font-size: 2.4rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.4rem; }
+
+a {
+    color: var(--amber);
+    text-decoration: none;
+    transition: color 0.1s;
+}
+a:hover { color: #ffd060; }
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.atm-screen {
+    max-width: 860px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--screen-bg);
+    border-left:  1px solid var(--border-mid);
+    border-right: 1px solid var(--border-mid);
+}
+
+/* ── HEADER ───────────────────────────────────────────────── */
+.atm-header {
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--border-bright);
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+}
+
+.atm-logo {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    color: var(--text-green);
+    letter-spacing: 0.1em;
+}
+.atm-logo span { color: var(--amber); }
+
+/* ── NAV ──────────────────────────────────────────────────── */
+.atm-nav {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.atm-nav a {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s;
+}
+.atm-nav a:hover {
+    color: var(--text-green);
+    border-color: var(--border-bright);
+    background: rgba(0,230,57,0.05);
+}
+
+.nav-user {
+    font-size: 0.75rem;
+    color: var(--amber-dim);
+    padding: 5px 10px;
+}
+
+/* Logout form styled to look like a nav link */
+.nav-logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+.nav-logout-btn {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--red);
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s;
+    line-height: inherit;
+}
+.nav-logout-btn:hover {
+    border-color: var(--red);
+    background: rgba(224,51,51,0.07);
+}
+
+/* ── STATUS BAR ────────────────────────────────────────────── */
+.atm-statusbar {
+    background: #060b06;
+    border-bottom: 1px solid var(--border);
+    padding: 3px 22px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+}
+.status-blink { animation: blink 1.4s step-end infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+.atm-main { padding: 28px 22px; }
+
+/* ── PANEL ────────────────────────────────────────────────── */
+.atm-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-bright);
+    margin-bottom: 20px;
+}
+
+.atm-panel-header {
+    background: var(--panel-header);
+    border-bottom: 1px solid var(--border-mid);
+    padding: 8px 16px;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.atm-panel-header::before {
+    content: '▸';
+    color: var(--text-green);
+}
+
+.atm-panel-body { padding: 18px 16px; }
+
+/* ── FORMS ────────────────────────────────────────────────── */
+.atm-form-group { margin-bottom: 16px; }
+
+.atm-form-group label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 5px;
+}
+
+.atm-form-group input[type="text"],
+.atm-form-group input[type="email"],
+.atm-form-group input[type="password"],
+.atm-form-group input[type="number"],
+.atm-form-group textarea,
+.atm-form-group select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-bright);
+    color: var(--text-green);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.1s, box-shadow 0.1s;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+.atm-form-group input:focus,
+.atm-form-group textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px rgba(0,230,57,0.25);
+}
+.atm-form-group input::placeholder,
+.atm-form-group textarea::placeholder {
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+.atm-form-group textarea { resize: vertical; min-height: 88px; }
+
+/* Password visibility wrapper */
+.pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+.pw-wrap input {
+    flex: 1;
+    padding-right: 40px;
+}
+.pw-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 38px;
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--border-bright);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.1s;
+    padding: 0;
+}
+.pw-toggle:hover { color: var(--text-green); }
+
+/* ── BUTTONS ──────────────────────────────────────────────── */
+.btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 9px 22px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.1s;
+    border-radius: 0;
+    background: transparent;
+    text-decoration: none;
+}
+.btn-primary {
+    color: #040804;
+    background: var(--green);
+    border-color: var(--green);
+}
+.btn-primary:hover {
+    background: #00cc33;
+    border-color: #00cc33;
+    color: #040804;
+}
+.btn-secondary {
+    color: var(--amber);
+    border-color: var(--amber-dim);
+}
+.btn-secondary:hover {
+    background: rgba(240,165,0,0.08);
+    border-color: var(--amber);
+    color: var(--amber);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-full { width: 100%; text-align: center; }
+
+/* ── ALERTS ───────────────────────────────────────────────── */
+.atm-alert {
+    padding: 11px 14px;
+    border-left: 3px solid;
+    font-size: 0.83rem;
+    margin-bottom: 14px;
+    font-family: var(--font-body);
+}
+.atm-alert-error   { background: rgba(224,51,51,0.07);  border-color: var(--red);      color: #f08080; }
+.atm-alert-success { background: rgba(0,230,57,0.06);   border-color: var(--green);    color: var(--text-green); }
+.atm-alert-info    { background: rgba(240,165,0,0.06);  border-color: var(--amber-dim);color: var(--amber); }
+
+/* ── TABLES ───────────────────────────────────────────────── */
+.atm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.atm-table th {
+    background: var(--panel-header);
+    color: var(--amber);
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-bright);
+}
+.atm-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    vertical-align: top;
+}
+.atm-table tr:last-child td { border-bottom: none; }
+.atm-table tr:hover td { background: rgba(0,230,57,0.025); }
+.atm-table .credit { color: var(--green); }
+.atm-table .debit  { color: var(--red);   }
+.atm-table .muted  { color: var(--text-dim); font-size: 0.78rem; }
+
+/* ── BALANCE DISPLAY ──────────────────────────────────────── */
+.atm-balance {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--text-green);
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+.atm-currency {
+    color: var(--amber-dim);
+    font-size: 0.65em;
+    margin-right: 3px;
+}
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+.atm-footer {
+    background: var(--panel-bg);
+    border-top: 1px solid var(--border);
+    padding: 10px 22px;
+    font-size: 0.66rem;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.04em;
+}
+
+/* ── AUTH PAGES ───────────────────────────────────────────── */
+.atm-auth-wrap {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+.atm-auth-box {
+    width: 100%;
+    max-width: 400px;
+}
+.atm-auth-logo {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.atm-auth-logo h1 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--text-green);
+    letter-spacing: 0.12em;
+}
+.atm-auth-logo .tagline {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* ── MODAL ────────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal-box {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-bright);
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
+}
+.modal-header {
+    background: var(--panel-header);
+    border-bottom: 1px solid var(--border-mid);
+    padding: 10px 16px;
+    font-size: 0.7rem;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+.modal-body { padding: 18px 16px; }
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+.modal-label {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.modal-value {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: bold;
+}
+.modal-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ── AVATAR ───────────────────────────────────────────────── */
+.atm-avatar {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border-bright);
+    object-fit: cover;
+    display: block;
+}
+.atm-avatar-placeholder {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border-bright);
+    background: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+}
+
+/* ── UTILITIES ────────────────────────────────────────────── */
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.text-muted  { color: var(--text-dim); }
+.text-amber  { color: var(--amber); }
+.text-green  { color: var(--text-green); }
+.text-red    { color: var(--red); }
+.mt-1 { margin-top: 6px;  }
+.mt-2 { margin-top: 14px; }
+.mt-3 { margin-top: 22px; }
+.mb-1 { margin-bottom: 6px;  }
+.mb-2 { margin-bottom: 14px; }
+.mb-3 { margin-bottom: 22px; }
+
+/* ── SCROLLBAR ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--screen-bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); }
+
+
